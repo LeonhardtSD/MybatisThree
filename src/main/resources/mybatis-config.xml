@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--对于数据库的信息我们将之保存在一个db.properties文件中，然后在mybatis-conf.xml文件中通过properties节点将之引入，如下：-->
+    <properties resource="db.properties"/>
+
+    <!--驼峰命名规则映射：该属性表示是否开启自动驼峰命名规则映射，即从经典的数据库列名A_COLUMN到经典Java属性名aColumn的映射，这种方式要求我们的数据库字段命名和JavaBean属性命名都要非常规范才能实现-->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="false"/>
+    </settings>
+   <!--typeAliases通过一个简单的别名来表示一个冗长的类型，这样可以降低复杂度。
+    类型别名标签typeAliases中可以包含多个typeAlias，如下-->
+    <typeAliases>
+        <typeAlias type="com.gaozhaoxi.entity.User" alias="user"/>
+        <!--<package name="com.gaozhaoxi.entity"/>-->
+    </typeAliases>
+
+    <!--<properties>-->
+        <!--<property name="driver" value="com.mysql.jdbc.Driver"/>-->
+        <!--<property name="url" value="jdbc:mysql://loaclhost:3306/mybatis"/>-->
+        <!--<property name="username" value="root"/>-->
+        <!--<property name="password" value="FREEDOM"/>-->
+    <!--</properties>-->
+    <environments default="development">
+        <environment id="development">
+            <!--事务管理类型-->
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <!--在需要使用数据库信息（db.properties）的地方通过${XXX}来应用相关值-->
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+                <!--<property name="driver" value="com.mysql.jdbc.Driver"/>-->
+                <!--<property name="url" value="jdbc:mysql://localhost:3306/mybatisone"/>-->
+                <!--<property name="username" value="root"/>-->
+                <!--<property name="password" value="FREEDOM"/>-->
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="userMapper.xml"/>
+    </mappers>
+</configuration>
