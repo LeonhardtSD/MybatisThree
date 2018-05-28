@@ -5,14 +5,43 @@
     <select id="getUser" resultType="user" parameterType="Long" resultMap="userMap">
         select * from user WHERE id=#{id}
     </select>
-    <insert id="insert">
-        insert into users (id, name, funkyNumber, roundingMode) values (
-        #{id}, #{name}, #{funkyNumber}, #{roundingMode}
-        )
-    </insert>
+    <!---->
+    <!--<insert id="insert">-->
+        <!--insert into users (id, name, funkyNumber, roundingMode) values (-->
+        <!--#{id}, #{name}, #{funkyNumber}, #{roundingMode}-->
+        <!--)-->
+    <!--</insert>-->
+    <!---->
+    <!--使用Map集合传递参数-->
     <select id="getUserByAddressAndName2" resultMap="userMap">
         SELECT * FROM USER  WHERE address=#{address} AND user_name LIKE concat(#{userName},'%')
     </select>
+
+    <!--使用@Param传递参数-->
+    <select id="getUserByAddressAndName" resultMap="userMap">
+        SELECT * FROM user WHERE address=#{address} AND user_name LIKE concat(#{username},'%')
+    </select>
+
+    <!--使用JavaBean传递参数-->
+    <select id="getUserByAddressAndName3" resultMap="userMap" parameterType="com.gaozhaoxi.transferBean.UserParams">
+        SELECT  * FROM  user WHERE address=#{address} AND user_name LIKE concat(#{username},'%')
+    </select>
+
+
+    <!--使用insert普通插入（能够实现主键回填）-->
+    <insert id="insertUser1" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+      insert into user (id, user_name, password, address) values (
+        NULL , #{userName}, #{password}, #{address})
+    </insert>
+
+    <!--使用insert普通插入（主键自定义）-->
+    <insert id="insertUser2" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+      <selectKey keyProperty="id" resultType="Long" order="BEFORE">
+          SELECT  if(max(id)IS NULL ,1,max(id)+2) AS  newId FROM user2
+      </selectKey>
+        insert into user2 (id, user_name, password, address) values (
+        #{id} , #{userName}, #{password}, #{address})
+    </insert>
 
     <resultMap id="userMap" type="com.gaozhaoxi.entity.User">
         <id property="id" column="id" javaType="long" jdbcType="NUMERIC"/>
